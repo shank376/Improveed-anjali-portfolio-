@@ -1,66 +1,491 @@
-<!    .ciegress-bg"><div class="progress-fill" data-width="85%"></div></div>
-</        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          obs.unobserve(entry.target);
-        }
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Anjali Yadav — Aspiring Surgeon</title>
+  <meta name="description" content="Anjali Yadav — aspiring surgeon, science student, medical innovation enthusiast" />
+  <style>
+    /* -------------------- Fonts & Base -------------------- */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    :root{
+      --primary:#00bfa5;
+      --secondary:#0097a7;
+      --dark:#003934;
+      --muted:#4a6562;
+      --bg1:#e8fbfa;
+      --bg2:#f6ffff;
+      --card:#ffffff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:'Poppins',sans-serif;
+      color:var(--dark);
+      background:linear-gradient(120deg,var(--bg1),var(--bg2),#dff6f6);
+      background-size:300% 300%;
+      animation:bgShift 16s ease infinite;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    /* Full-screen subtle canvas sits behind content */
+    canvas#bgCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none;opacity:0.55}
+
+    /* -------------------- NAV -------------------- */
+    nav{
+      position:fixed;top:0;left:0;right:0;height:76px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 5%;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);z-index:40;
+      box-shadow:0 6px 30px rgba(10,30,30,0.06);
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo-circle{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;box-shadow:0 8px 26px rgba(0,191,165,0.14)}
+    .brand-title{font-weight:700;color:var(--dark);font-size:1rem}
+    .nav-links{display:flex;gap:18px}
+    .nav-links a{text-decoration:none;color:var(--dark);font-weight:600;padding:8px 6px;position:relative}
+    .nav-links a::after{content:'';position:absolute;left:0;bottom:-7px;height:3px;width:0;border-radius:3px;background:var(--primary);transition:width .22s}
+    .nav-links a:hover::after{width:100%}
+    @media(max-width:880px){.nav-links{display:none}}
+
+    /* -------------------- HERO -------------------- */
+    header.hero{min-height:86vh;padding:92px 5% 40px;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:visible}
+    .hero-inner{max-width:980px}
+    .eyebrow{color:var(--primary);font-weight:700;letter-spacing:1px}
+    h1{font-size:2.6rem;margin-top:8px;line-height:1.02}
+    h1 .accent{background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    p.lead{max-width:760px;margin:14px auto;color:var(--muted);font-size:1.05rem}
+    .cta{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+    .btn{padding:10px 18px;border-radius:999px;border:0;font-weight:700;cursor:pointer;transition:transform .22s,box-shadow .22s}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 10px 28px rgba(0,191,165,0.14)}
+    .btn-primary:hover{transform:translateY(-4px)}
+    .btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+    .hero-tags{display:flex;gap:10px;justify-content:center;margin-top:16px;color:var(--muted);font-weight:600;flex-wrap:wrap}
+
+    /* subtle floating medical accents */
+    .float-accents{position:absolute;inset:auto 4% 6% 4%;opacity:0.06;font-size:2.6rem;pointer-events:none;z-index:-1}
+
+    /* -------------------- SECTION BASE -------------------- */
+    section{padding:58px 5%}
+    .container{max-width:1160px;margin:0 auto}
+    .section-header{text-align:center;margin-bottom:22px}
+    .section-sub{color:var(--primary);font-weight:800;letter-spacing:1.6px;text-transform:uppercase;font-size:.8rem}
+    .section-title{font-size:1.9rem;font-weight:700;margin-top:6px}
+    .rule{width:80px;height:4px;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;margin:12px auto 0}
+
+    /* -------------------- ABOUT -------------------- */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+    .portrait{border-radius:14px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.08)}
+    .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+    .about-text h3{font-size:1.35rem;margin-bottom:8px}
+    .about-text p{color:var(--muted);margin-bottom:10px}
+    .quote{background:linear-gradient(180deg,#eaf9f8,#dff6f4);padding:12px;border-left:4px solid var(--primary);border-radius:8px;font-style:italic;color:#23514d}
+
+    .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .mini-card{background:var(--card);padding:12px;border-radius:10px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 28px rgba(0,0,0,0.06)}
+    .mini-card .ic{width:44px;height:44;border-radius:10px;background:linear-gradient(90deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+
+    /* -------------------- TIMELINE / EDUCATION -------------------- */
+    .timeline{display:flex;flex-direction:column;gap:12px}
+    .timeline-item{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.06);border-left:5px solid var(--primary)}
+
+    /* -------------------- ACHIEVEMENTS -------------------- */
+    .ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    .ach-card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,0.06);opacity:0;transform:translateY(20px);transition:all .55s cubic-bezier(.2,.9,.2,1)}
+
+    /* -------------------- SKILLS -------------------- */
+    .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+    .skill-row{margin-bottom:12px}
+    .skill-row .label{display:flex;justify-content:space-between;margin-bottom:6px;color:var(--muted);font-weight:700}
+    .progress-bg{height:12px;background:#eef9f7;border-radius:999px;overflow:hidden}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:999px;transition:width 1.4s cubic-bezier(.2,.9,.2,1)}
+
+    .soft-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+    .soft-card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.06);text-align:center}
+
+    /* -------------------- LANGUAGES (circular) -------------------- */
+    .langs{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+    .lang{width:180px;text-align:center}
+    .circle-wrap{width:120px;height:120px;margin:0 auto;position:relative}
+    svg{width:120px;height:120px}
+    .circle-bg{fill:none;stroke:#eef9f7;stroke-width:10}
+    .circle-bar{fill:none;stroke-linecap:round;stroke-width:10;stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.9,.2,1)}
+    .circle-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:800;color:var(--primary)}
+
+    /* -------------------- CONTACT -------------------- */
+    .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .contact-card{background:linear-gradient(180deg,#075a52,#006a5a);color:white;padding:14px;border-radius:10px;text-align:center;box-shadow:0 12px 36px rgba(0,0,0,0.12)}
+
+    /* -------------------- FOOTER -------------------- */
+    footer{padding:28px 5%;text-align:center;color:var(--muted);margin-top:18px}
+
+    /* -------------------- Reveal utility -------------------- */
+    .reveal{opacity:0;transform:translateY(22px);transition:all .6s cubic-bezier(.2,.9,.2,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    @media(max-width:920px){.about-grid{grid-template-columns:1fr}.skills-grid{grid-template-columns:1fr}}
+    @media(max-width:520px){h1{font-size:1.5rem}}
+  </style>
+</head>
+<body>
+  <!-- Canvas for animated subtle particles -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- NAV -->
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="brand">
+      <div class="logo-circle">⚕️</div>
+      <div class="brand-title">Anjali Yadav</div>
+    </div>
+    <div class="nav-links" role="menubar">
+      <a href="#about" role="menuitem">About</a>
+      <a href="#education" role="menuitem">Education</a>
+      <a href="#achievements" role="menuitem">Achievements</a>
+      <a href="#skills" role="menuitem">Skills</a>
+      <a href="#languages" role="menuitem">Languages</a>
+      <a href="#contact" role="menuitem">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="home" role="banner" aria-label="Intro">
+    <div class="float-accents" aria-hidden="true">⚕️ 🩺 🧬 🔬</div>
+    <div class="hero-inner container">
+      <div class="eyebrow">Aspiring Surgeon · Medical Innovator</div>
+      <h1>Hi — I'm <span class="accent">Anjali Yadav</span></h1>
+      <p class="lead">A focused and compassionate science student from JNV Chandauli. I aim to combine clinical skills with research to improve healthcare. I love hands-on science, health awareness, and community outreach.</p>
+
+      <div class="cta">
+        <button class="btn btn-primary" onclick="scrollToId('#contact')">Get in Touch</button>
+        <button class="btn btn-outline" onclick="scrollToId('#about')">Learn More</button>
+      </div>
+
+      <div class="hero-tags" aria-hidden="true">
+        <div>🎓 Class 10 (CBSE)</div>
+        <div>🏅 Regional Sports & Science Awards</div>
+        <div>🧪 Visits: CSIR-CDRI, IIT BHU</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="container" aria-labelledby="about-title">
+    <div class="section-header">
+      <div class="section-sub">Get to know</div>
+      <div id="about-title" class="section-title">About Me</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="about-grid">
+      <div class="portrait reveal" id="portrait">
+        <!-- SVG placeholder portrait; swap with a real image if you have it -->
+        <img alt="Anjali portrait" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'%3E%3Crect width='1200' height='1200' rx='36' fill='%23eaf9f8'/%3E%3Ctext x='50%25' y='46%25' font-family='Poppins' font-size='220' text-anchor='middle' fill='%23004d40'%3EAN%3C/text%3E%3Ctext x='50%25' y='60%25' font-family='Poppins' font-size='48' text-anchor='middle' fill='%230097a7'%3EMedical Student%3C/text%3E%3C/svg%3E" />
+      </div>
+
+      <div class="about-text reveal" id="about-text">
+        <h3>Passionate Medical Aspirant</h3>
+        <p>I am a student with deep interest in human biology and clinical care. My ambition is to become a surgeon who uses research and compassion to improve patient outcomes. School projects and institutional visits have shaped my approach: think like a scientist, act like a caregiver.</p>
+        <p>Exposure at CSIR-CDRI and IIT (BHU) strengthened my understanding of laboratory work, experimentation, and scientific communication. I lead science club activities and community health awareness drives.</p>
+
+        <div class="quote">“Wherever the art of medicine is loved, there is also a love of humanity.” — Hippocrates</div>
+
+        <div class="mini-grid">
+          <div class="mini-card">
+            <div class="ic">📅</div>
+            <div>
+              <div style="font-weight:700">Date of Birth</div>
+              <div style="color:var(--muted)">1st February 2010</div>
+            </div>
+          </div>
+
+          <div class="mini-card">
+            <div class="ic">🏫</div>
+            <div>
+              <div style="font-weight:700">School</div>
+              <div style="color:var(--muted)">JNV Chandauli</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="container" aria-labelledby="edu-title">
+    <div class="section-header">
+      <div class="section-sub">My journey</div>
+      <div id="edu-title" class="section-title">Education & Certifications</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <strong>Jawahar Navodaya Vidyalaya (JNV Chandauli)</strong>
+        <div style="margin-top:6px;color:var(--primary);font-weight:700">Current — Class 10 (CBSE)</div>
+        <p style="margin-top:8px;color:var(--muted)">Secondary education with focus on science (Biology). Active in science projects and health awareness.</p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <strong>Oracle Cloud – AI Foundations (Certification)</strong>
+        <div style="margin-top:6px;color:var(--primary);font-weight:700">October 2025</div>
+        <p style="margin-top:8px;color:var(--muted)">AI foundations certification — useful for data-driven healthcare approaches.</p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <strong>CSIR-CDRI, Lucknow (Educational Visit)</strong>
+        <div style="margin-top:6px;color:var(--primary);font-weight:700">Educational Visit</div>
+        <p style="margin-top:8px;color:var(--muted)">Observed biomedical research and interacted with scientists.</p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <strong>IIT (BHU), Varanasi (Educational Visit)</strong>
+        <div style="margin-top:6px;color:var(--primary);font-weight:700">Educational Visit</div>
+        <p style="margin-top:8px;color:var(--muted)">Hands-on experiments and lab exposure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section id="achievements" class="container" aria-labelledby="ach-title">
+    <div class="section-header">
+      <div class="section-sub">My accomplishments</div>
+      <div id="ach-title" class="section-title">Achievements & Activities</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="ach-grid">
+      <div class="ach-card reveal"><h4>🏅 Regional Kabaddi Champion</h4><p style="color:var(--muted)">Represented JNV Chandauli at regional level; developed teamwork and resilience.</p></div>
+      <div class="ach-card reveal"><h4>⚡ Kho-Kho Sports Excellence</h4><p style="color:var(--muted)">Inter-house & district participation; improved agility and strategy.</p></div>
+      <div class="ach-card reveal"><h4>👑 Leadership Recognition</h4><p style="color:var(--muted)">Led teams and organized school programs, showing strong organizational skills.</p></div>
+      <div class="ach-card reveal"><h4>🎯 Scientific Institution Selection</h4><p style="color:var(--muted)">Selected for visits to CSIR-CDRI and IIT BHU for outstanding science interest.</p></div>
+      <div class="ach-card reveal"><h4>🔬 Science Club Leadership</h4><p style="color:var(--muted)">Organized workshops and health awareness activities.</p></div>
+      <div class="ach-card reveal"><h4>📊 Medical Exhibition Presenter</h4><p style="color:var(--muted)">Presented clear models and posters on anatomy and circulation.</p></div>
+      <div class="ach-card reveal"><h4>🎭 Creative Arts Recognition</h4><p style="color:var(--muted)">Creative writing and singing help communicate science better.</p></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="container" aria-labelledby="skills-title">
+    <div class="section-header">
+      <div class="section-sub">My expertise</div>
+      <div id="skills-title" class="section-title">Skills & Competencies</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="skills-grid">
+      <div>
+        <div class="skill-row reveal"><div class="label"><span>Biology & Medical Science</span><span>95%</span></div><div class="progress-bg"><div class="progress-fill" data-width="95%"></div></div></div>
+        <div class="skill-row reveal"><div class="label"><span>Health Awareness & Education</span><span>92%</span></div><div class="progress-bg"><div class="progress-fill" data-width="92%"></div></div></div>
+        <div class="skill-row reveal"><div class="label"><span>Scientific Research & Analysis</span><span>88%</span></div><div class="progress-bg"><div class="progress-fill" data-width="88%"></div></div></div>
+        <div class="skill-row reveal"><div class="label"><span>Problem Solving & Critical Thinking</span><span>90%</span></div><div class="progress-bg"><div class="progress-fill" data-width="90%"></div></div></div>
+        <div class="skill-row reveal"><div class="label"><span>Photography & Documentation</span><span>85%</span></div><div class="progress-bg"><div class="progress-fill" data-width="85%"></div></div></div>
+      </div>
+
+      <div>
+        <h4 style="margin-bottom:10px;color:var(--dark)">Soft Skills</h4>
+        <div class="soft-grid">
+          <div class="soft-card reveal"><div style="font-size:1.4rem">🎯</div><div style="font-weight:700;margin-top:8px">Leadership</div></div>
+          <div class="soft-card reveal"><div style="font-size:1.4rem">🤝</div><div style="font-weight:700;margin-top:8px">Teamwork</div></div>
+          <div class="soft-card reveal"><div style="font-size:1.4rem">💪</div><div style="font-weight:700;margin-top:8px">Self Discipline</div></div>
+          <div class="soft-card reveal"><div style="font-size:1.4rem">❤️</div><div style="font-weight:700;margin-top:8px">Empathy</div></div>
+          <div class="soft-card reveal"><div style="font-size:1.4rem">✍️</div><div style="font-weight:700;margin-top:8px">Creative Writing</div></div>
+          <div class="soft-card reveal"><div style="font-size:1.4rem">🎯</div><div style="font-weight:700;margin-top:8px">Motivation</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section id="languages" class="container" aria-labelledby="lang-title">
+    <div class="section-header">
+      <div class="section-sub">Communication</div>
+      <div id="lang-title" class="section-title">Languages</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="langs">
+      <div class="lang reveal">
+        <div class="circle-wrap">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <defs><linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00bfa5"/><stop offset="100%" stop-color="#0097a7"/></linearGradient></defs>
+            <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-bar" cx="50" cy="50" r="45" stroke="url(#lg1)" data-percent="75"></circle>
+          </svg>
+          <div class="circle-center">75%</div>
+        </div>
+        <div style="margin-top:8px;font-weight:700">English</div>
+        <div style="color:var(--muted)">Fluent</div>
+      </div>
+
+      <div class="lang reveal">
+        <div class="circle-wrap">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <defs><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00bfa5"/><stop offset="100%" stop-color="#0097a7"/></linearGradient></defs>
+            <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-bar" cx="50" cy="50" r="45" stroke="url(#lg2)" data-percent="95"></circle>
+          </svg>
+          <div class="circle-center">95%</div>
+        </div>
+        <div style="margin-top:8px;font-weight:700">Hindi</div>
+        <div style="color:var(--muted)">Native</div>
+      </div>
+
+      <div class="lang reveal">
+        <div class="circle-wrap">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <defs><linearGradient id="lg3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00bfa5"/><stop offset="100%" stop-color="#0097a7"/></linearGradient></defs>
+            <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+            <circle class="circle-bar" cx="50" cy="50" r="45" stroke="url(#lg3)" data-percent="65"></circle>
+          </svg>
+          <div class="circle-center">65%</div>
+        </div>
+        <div style="margin-top:8px;font-weight:700">Assamese</div>
+        <div style="color:var(--muted)">Conversational</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="container" aria-labelledby="contact-title">
+    <div class="section-header">
+      <div class="section-sub">Let's connect</div>
+      <div id="contact-title" class="section-title">Contact Me</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-card reveal"><div style="font-weight:800;margin-bottom:6px">📧 Email</div><div>anjaliyadav6379@gmail.com</div></div>
+      <div class="contact-card reveal"><div style="font-weight:800;margin-bottom:6px">📱 Phone</div><div>+91 96961 58613</div></div>
+      <div class="contact-card reveal"><div style="font-weight:800;margin-bottom:6px">📍 Location</div><div>Chandauli, India</div></div>
+    </div>
+
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-primary" onclick="location.href='mailto:anjaliyadav6379@gmail.com'">Send Message ✉️</button>
+    </div>
+  </section>
+
+  <footer>
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="font-weight:700">© 2025 Anjali Yadav</div>
+      <div style="color:var(--muted);margin-top:6px">Aspiring Surgeon • Medical Innovator • Future Healthcare Leader</div>
+    </div>
+  </footer>
+
+  <script>
+    /* -------------------- Small helpers -------------------- */
+    function scrollToId(sel){ const el=document.querySelector(sel); if(!el) return; const y=el.getBoundingClientRect().top + window.scrollY - 72; window.scrollTo({top:y,behavior:'smooth'}); }
+
+    /* -------------------- Reveal on scroll (run once) -------------------- */
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){ entry.target.classList.add('visible'); obs.unobserve(entry.target); }
       });
-    }, { threshold: 0.18 });
-    reveals.forEach(r => revealObs.observe(r));
+    }, {threshold:0.18});
+    revealEls.forEach(e=>revealObs.observe(e));
 
-    // Animate progress bars when skills section enters
-    const skillSection = document.querySelector('#skills');
-    if(skillSection){
-      const skillObserver = new IntersectionObserver((entries, obs) => {
+    /* -------------------- Skill bars animation -------------------- */
+    const skillsSection = document.querySelector('#skills');
+    if(skillsSection){
+      const sObs = new IntersectionObserver((entries, o) => {
         entries.forEach(entry => {
           if(entry.isIntersecting){
-            document.querySelectorAll('.progress-fill').forEach(p => {
-              const w = p.getAttribute('data-width') || '80%';
-              p.style.width = w;
-            });
-            obs.unobserve(entry.target);
+            document.querySelectorAll('.progress-fill').forEach(p => { p.style.width = p.getAttribute('data-width') || '80%'; });
+            o.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.4 });
-      skillObserver.observe(skillSection);
+      }, {threshold:0.35});
+      sObs.observe(skillsSection);
     }
 
-    // Animate circular language bars when languages section enters (run once)
-    const languagesSection = document.querySelector('#languages');
-    const CIRCUMFERENCE = 2 * Math.PI * 45; // r = 45 -> circumference ≈ 283
-    // Set baseline strokeDasharray for all bars so CSS transition works even before JS
-    document.querySelectorAll('.circle-bar').forEach(c => {
-      c.style.strokeDasharray = String(Math.round(CIRCUMFERENCE));
-      c.style.strokeDashoffset = String(Math.round(CIRCUMFERENCE));
-    });
+    /* -------------------- Circular language bars -------------------- */
+    const CIRC = 2 * Math.PI * 45; // r=45, circumference ~ 283
+    document.querySelectorAll('.circle-bar').forEach(c => { c.style.strokeDasharray = String(Math.round(CIRC)); c.style.strokeDashoffset = String(Math.round(CIRC)); });
 
-    if(languagesSection){
-      const langObserver = new IntersectionObserver((entries, obs) => {
+    const langsSection = document.querySelector('#languages');
+    if(langsSection){
+      const lObs = new IntersectionObserver((entries, o) => {
         entries.forEach(entry => {
           if(entry.isIntersecting){
-            document.querySelectorAll('.circle-bar').forEach(circle => {
+            document.querySelectorAll('.circle-bar').forEach((circle, i) => {
               const pct = Number(circle.getAttribute('data-percent') || 0);
-              const full = CIRCUMFERENCE;
-              const offset = Math.round(full - (full * pct / 100));
-              // small delay for nicer stagger
-              setTimeout(() => { circle.style.strokeDashoffset = offset; }, 120);
+              const offset = Math.round(CIRC - (CIRC * pct / 100));
+              setTimeout(()=> circle.style.strokeDashoffset = offset, 120 + i*80);
             });
-            obs.unobserve(entry.target);
+            o.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.35 });
-      langObserver.observe(languagesSection);
+      }, {threshold:0.28});
+      lObs.observe(langsSection);
     }
 
-    // Navbar shadow on scroll
-    const nav = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
-      nav.style.boxShadow = window.scrollY > 20 ? '0 10px 40px rgba(0,0,0,0.09)' : '0 6px 24px rgba(0,0,0,0.06)';
-    });
+    /* -------------------- Canvas background (subtle floating particles) -------------------- */
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = innerWidth;
+      let H = canvas.height = innerHeight;
+      const particles = [];
+      const count = Math.round((W*H)/120000); // scale number of particles to screen size
 
-    // Respect reduced motion
+      function rand(min,max){ return Math.random()*(max-min)+min; }
+
+      function createParticles(){
+        particles.length = 0;
+        for(let i=0;i<count;i++){
+          particles.push({
+            x: rand(0,W),
+            y: rand(0,H),
+            r: rand(1.4,3.6),
+            vx: rand(-0.2,0.2),
+            vy: rand(-0.1,0.3),
+            alpha: rand(0.12,0.35),
+            hue: rand(165,185)
+          });
+        }
+      }
+
+      function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; createParticles(); }
+      addEventListener('resize', resize, {passive:true});
+      createParticles();
+
+      function draw(){
+        ctx.clearRect(0,0,W,H);
+        // subtle glow radial gradient
+        for(let p of particles){
+          p.x += p.vx;
+          p.y += p.vy;
+          if(p.x > W+20) p.x = -20;
+          if(p.x < -20) p.x = W+20;
+          if(p.y > H+20) p.y = -20;
+          if(p.y < -20) p.y = H+20;
+
+          ctx.beginPath();
+          const g = ctx.createRadialGradient(p.x,p.y,p.r*0.1,p.x,p.y,p.r*6);
+          g.addColorStop(0, `hsla(${p.hue},60%,60%,${p.alpha})`);
+          g.addColorStop(0.6, `hsla(${p.hue},60%,60%,${p.alpha*0.25})`);
+          g.addColorStop(1, `hsla(${p.hue},60%,60%,0)`);
+          ctx.fillStyle = g;
+          ctx.arc(p.x,p.y,p.r*6,0,Math.PI*2);
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    /* -------------------- Navbar shadow tweak -------------------- */
+    (function(){
+      const nav = document.querySelector('nav');
+      window.addEventListener('scroll', () => {
+        nav.style.boxShadow = window.scrollY > 20 ? '0 12px 40px rgba(10,30,30,0.09)' : '0 6px 30px rgba(10,30,30,0.06)';
+      }, {passive:true});
+    })();
+
+    /* -------------------- Reduced motion accessibility -------------------- */
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      document.querySelectorAll('.progress-fill').forEach(el => { el.style.transition = 'none'; el.style.width = el.getAttribute('data-width') || '0' });
-      document.querySelectorAll('.circle-bar').forEach(el => { el.style.transition = 'none' });
+      document.querySelectorAll('.progress-fill').forEach(e=>{ e.style.transition='none'; e.style.width = e.getAttribute('data-width') || '0'; });
+      document.querySelectorAll('.circle-bar').forEach(c=> c.style.transition='none');
     }
   </script>
 </body>
