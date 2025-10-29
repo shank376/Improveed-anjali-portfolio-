@@ -1,5 +1,106 @@
 <!doctype html>
+
 <html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Anjali Yadav — Aspiring Surgeon</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    :root{
+      --primary:#00bfa5;
+      --secondary:#0097a7;
+      --dark:#004d40;
+      --muted:#4a6562;
+      --bg1:#e8fbfa;
+      --bg2:#f6ffff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:'Poppins',sans-serif;color:var(--dark);background:linear-gradient(120deg,var(--bg1),var(--bg2),#dff6f6);background-size:300% 300%;animation:bgShift 16s ease infinite;overflow-x:hidden;}
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    canvas#bgCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none;opacity:0.55}
+    nav{position:fixed;top:0;left:0;right:0;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);z-index:40;box-shadow:0 6px 30px rgba(10,30,30,0.06)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo-circle{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;box-shadow:0 8px 26px rgba(0,191,165,0.14)}
+    .brand-title{font-weight:700;color:var(--dark);font-size:1rem}
+    .nav-links{display:flex;gap:18px}
+    .nav-links a{text-decoration:none;color:var(--dark);font-weight:600;padding:8px 6px;position:relative}
+    .nav-links a::after{content:'';position:absolute;left:0;bottom:-7px;height:3px;width:0;border-radius:3px;background:var(--primary);transition:width .22s}
+    .nav-links a:hover::after{width:100%}
+    header.hero{min-height:86vh;padding:92px 5% 40px;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:visible}
+    .hero-inner{max-width:980px}
+    .eyebrow{color:var(--primary);font-weight:700;letter-spacing:1px}
+    h1{font-size:2.6rem;margin-top:8px;line-height:1.02}
+    h1 .accent{background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    p.lead{max-width:760px;margin:14px auto;color:var(--muted);font-size:1.05rem}
+    .cta{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+    .btn{padding:10px 18px;border-radius:999px;border:0;font-weight:700;cursor:pointer;transition:transform .22s,box-shadow .22s}
+    .btn-primary{background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 10px 28px rgba(0,191,165,0.14)}
+    .btn-primary:hover{transform:translateY(-4px)}
+    .btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+    section{padding:58px 5%}
+    .container{max-width:1160px;margin:0 auto}
+    .section-header{text-align:center;margin-bottom:22px}
+    .section-sub{color:var(--primary);font-weight:800;letter-spacing:1.6px;text-transform:uppercase;font-size:.8rem}
+    .section-title{font-size:1.9rem;font-weight:700;margin-top:6px}
+    .rule{width:80px;height:4px;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;margin:12px auto 0}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+    .portrait{border-radius:14px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.08)}
+    .portrait img{width:100%;height:auto;border-radius:14px}
+    .about-text p{color:var(--muted);margin-bottom:10px;line-height:1.6}
+    .quote{background:#e0f2f1;border-left:5px solid var(--primary);padding:1rem;border-radius:10px;font-style:italic;color:#23514d;margin-top:20px}
+    .resume-btn{display:inline-block;margin-top:18px;padding:10px 20px;background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;text-decoration:none;border-radius:50px;font-weight:600;transition:all .3s ease;box-shadow:0 8px 24px rgba(0,191,165,0.2)}
+    .resume-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,191,165,0.3)}
+    @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+  <nav>
+    <div class="brand">
+      <div class="logo-circle">⚕️</div>
+      <div class="brand-title">Anjali Yadav</div>
+    </div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#languages">Languages</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Aspiring Surgeon · Medical Innovator</div>
+      <h1>Hi — I'm <span class="accent">Anjali Yadav</span></h1>
+      <p class="lead">A focused and compassionate science student from JNV Chandauli. I aim to combine clinical skills with research to improve healthcare. I love hands-on science, health awareness, and community outreach.</p>
+      <div class="cta">
+        <button class="btn btn-primary" onclick="scrollToId('#contact')">Contact Me</button>
+      </div>
+    </div>
+  </header>
+  <section id="about">
+    <div class="section-header">
+      <div class="section-sub">Get to know</div>
+      <div class="section-title">About Me</div>
+      <div class="rule"></div>
+    </div>
+    <div class="about-grid">
+      <div class="portrait"><img src="https://i.postimg.cc/qRWq0MMR/IMG-20251029-185113.jpg" alt="Anjali photo"></div>
+      <div class="about-text">
+        <p>I’m a student at JNV Chandauli, exploring the fascinating world of medicine and science. My goal is to pursue surgery while engaging in medical research that contributes to global health solutions.</p>
+        <p>Through visits to IIT BHU and CSIR-CDRI, I’ve developed a strong foundation in practical science and an eagerness to merge technology with medical innovation.</p>
+        <a href="resume.pdf" target="_blank" class="resume-btn">📄 Download Resume</a>
+        <div class="quote">“Wherever the art of medicine is loved, there is also a love of humanity.” — Hippocrates</div>
+      </div>
+    </div>
+  </section>
+  <script>
+    function scrollToId(sel){const el=document.querySelector(sel);if(!el)return;window.scrollTo({top:el.offsetTop-70,behavior:'smooth'});}
+    (function(){const c=document.getElementById('bgCanvas'),x=c.getContext('2d');let W=c.width=innerWidth,H=c.height=innerHeight;let p=[];for(let i=0;i<60;i++){p.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+1});}function draw(){x.clearRect(0,0,W,H);p.forEach(a=>{a.x+=a.vx;a.y+=a.vy;if(a.x<0)a.x=W;if(a.x>W)a.x=0;if(a.y<0)a.y=H;if(a.y>H)a.y=0;x.beginPath();x.fillStyle='rgba(0,191,165,0.25)';x.arc(a.x,a.y,a.r,0,2*Math.PI);x.fill();});requestAnimationFrame(draw);}draw();window.addEventListener('resize',()=>{W=c.width=innerWidth;H=c.height=innerHeight;});})();
+  </script>
+</body>
+<!doctype html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
